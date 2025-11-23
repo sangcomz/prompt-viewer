@@ -77,7 +77,9 @@ function parseJSONL(filePath: string): ConversationMessage[] {
 
 function generateTitle(messages: ConversationMessage[]): string {
   for (const msg of messages) {
-    if (msg.type === 'user' && msg.message) {
+    // Exclude context summary messages from title generation
+    const isCompactSummary = (msg as any).isCompactSummary === true;
+    if (msg.type === 'user' && msg.message && !isCompactSummary) {
       const content = extractTextContent(msg.message.content);
       if (content) {
         const firstLine = content.split('\n')[0];
@@ -91,8 +93,9 @@ function generateTitle(messages: ConversationMessage[]): string {
 }
 
 function generateDescription(messages: ConversationMessage[]): string {
+  // Exclude context summary messages from description generation
   const userMessages = messages
-    .filter((m) => m.type === 'user' && m.message)
+    .filter((m) => m.type === 'user' && m.message && !(m as any).isCompactSummary)
     .slice(0, 3);
 
   if (userMessages.length === 0) return 'No description';
@@ -117,12 +120,22 @@ function extractDate(messages: ConversationMessage[]): string {
 }
 
 function countMessages(messages: ConversationMessage[]): number {
-  return messages.filter(
-    (m) =>
-      (m.type === 'user' || m.type === 'assistant') &&
-      !m.error &&
-      !m.isApiErrorMessage
-  ).length;
+  return messages.filter((m) => {
+    // Exclude errors and API error messages
+    if (m.error || m.isApiErrorMessage) return false;
+
+    // Only count user and assistant messages (including context summaries)
+    if (m.type !== 'user' && m.type !== 'assistant') return false;
+
+    // Match parser.ts logic: check content length
+    if (m.message) {
+      const content = extractTextContent(m.message.content);
+      if (m.type === 'user' && (!content || content.length <= 5)) return false;
+      if (m.type === 'assistant' && (!content || content.length <= 20)) return false;
+    }
+
+    return true;
+  }).length;
 }
 
 function extractAIName(filename: string): string | undefined {
