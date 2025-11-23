@@ -10,23 +10,53 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Force static generation
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
-  const conversationsDir = path.join(
+  const indexPath = path.join(
     process.cwd(),
     'public',
-    'conversations'
+    'conversations',
+    'index.json'
   );
 
   try {
-    const files = fs.readdirSync(conversationsDir);
-    const jsonlFiles = files.filter((file) => file.endsWith('.jsonl'));
+    const indexData = fs.readFileSync(indexPath, 'utf-8');
+    const conversations = JSON.parse(indexData);
 
-    return jsonlFiles.map((file) => ({
-      id: file.replace('.jsonl', ''),
+    const params = conversations.map((conv: { id: string }) => ({
+      id: conv.id,
     }));
+
+    console.log('Generated static params from index.json:', params);
+    return params;
   } catch (error) {
     console.error('Failed to generate static params:', error);
-    return [];
+
+    // Fallback to reading directory
+    try {
+      const conversationsDir = path.join(
+        process.cwd(),
+        'public',
+        'conversations'
+      );
+      const files = fs.readdirSync(conversationsDir);
+      const jsonlFiles = files.filter(
+        (file) => file.endsWith('.jsonl') && !file.startsWith('.')
+      );
+
+      const params = jsonlFiles.map((file) => ({
+        id: file.replace('.jsonl', ''),
+      }));
+
+      console.log('Generated static params from directory:', params);
+      return params;
+    } catch (dirError) {
+      console.error('Fallback also failed:', dirError);
+      return [];
+    }
   }
 }
 
