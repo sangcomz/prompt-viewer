@@ -83,6 +83,9 @@ export function parseConversationFile(
       continue;
     }
 
+    // Check if this is a context compaction message
+    const isCompactSummary = (msg as any).isCompactSummary === true;
+
     if (msgType === 'user') {
       const messageObj = msg.message;
       const content = messageObj
@@ -91,7 +94,7 @@ export function parseConversationFile(
 
       if (content && content.length > 5) {
         messages.push({
-          role: 'user',
+          role: isCompactSummary ? 'context' : 'user',
           content,
           timestamp: msg.timestamp,
           isAgent: false,
@@ -159,6 +162,7 @@ export function formatTimestamp(timestamp: string): string {
  * Generate a title from the first user message
  */
 export function generateTitle(messages: ParsedMessage[]): string {
+  // Exclude context messages from title generation
   const firstUserMessage = messages.find((m) => m.role === 'user');
   if (!firstUserMessage) return 'Untitled Conversation';
 
@@ -176,6 +180,7 @@ export function generateTitle(messages: ParsedMessage[]): string {
  * Generate a description from conversation content
  */
 export function generateDescription(messages: ParsedMessage[]): string {
+  // Exclude context messages from description generation
   const userMessages = messages.filter((m) => m.role === 'user');
   if (userMessages.length === 0) return 'No description';
 

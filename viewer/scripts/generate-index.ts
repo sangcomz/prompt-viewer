@@ -129,34 +129,52 @@ function extractAIName(filename: string): string | undefined {
   // Extract AI name from filename prefix
   // Examples:
   //   "claude_code_abc123.jsonl" -> "Claude Code"
+  //   "github_copilot_test-feature.jsonl" -> "Github Copilot"
   //   "chatgpt_xyz.jsonl" -> "Chatgpt"
-  //   "gemini_test.jsonl" -> "Gemini"
   //   "abc123.jsonl" -> undefined (no prefix)
 
   // Remove .jsonl extension first
   const nameWithoutExt = filename.replace(/\.jsonl$/, '');
   const parts = nameWithoutExt.split('_');
 
-  // Need at least 2 parts for a prefix (e.g., "claude_code")
+  // Need at least 2 parts for a prefix
   if (parts.length < 2) {
     return undefined;
   }
 
-  // Check if last part looks like an ID (alphanumeric, might include hyphens)
+  // Strategy: Look for common AI assistant prefixes
+  // If filename starts with known AI names, extract them
+  const knownAIs = [
+    { pattern: /^github_copilot/i, name: 'Github Copilot' },
+    { pattern: /^claude_code/i, name: 'Claude Code' },
+    { pattern: /^chatgpt/i, name: 'ChatGPT' },
+    { pattern: /^gemini/i, name: 'Gemini' },
+    { pattern: /^claude/i, name: 'Claude' },
+    { pattern: /^copilot/i, name: 'Copilot' },
+  ];
+
+  for (const ai of knownAIs) {
+    if (ai.pattern.test(nameWithoutExt)) {
+      return ai.name;
+    }
+  }
+
+  // Fallback: Check if last part looks like an ID
   const lastPart = parts[parts.length - 1];
   const looksLikeId = /^[a-f0-9-]+$/i.test(lastPart);
 
-  if (!looksLikeId) {
-    return undefined;
+  if (looksLikeId && parts.length >= 2) {
+    // Join all parts except the last one as the AI name
+    const aiNameParts = parts.slice(0, -1);
+    const aiName = aiNameParts
+      .map((part) =>
+        part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+      )
+      .join(' ');
+    return aiName;
   }
 
-  // Join all parts except the last one as the AI name
-  const aiNameParts = parts.slice(0, -1);
-  const aiName = aiNameParts
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join(' ');
-
-  return aiName;
+  return undefined;
 }
 
 function main() {

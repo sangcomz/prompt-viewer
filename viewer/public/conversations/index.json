@@ -8,5 +8,35 @@
     "cwd": "N/A",
     "gitBranch": "N/A",
     "aiName": "Claude Code"
+  },
+  {
+    "id": "github_copilot_domain_layer_testing_with_fakes",
+    "title": "프로젝트를 분석하고 모듈별로 필요한 테스트 코드에 대해서 알려주고, 어떤 식으로 작성할지 계획을 알려줘",
+    "date": "2025-11-23",
+    "description": "프로젝트를 분석하고 모듈별로 필요한 테스트 코드에 대해서 알려주고, 어떤 식으로 작성할지 계획을 알려줘 · 아 그리고 테스트 코드의 경우 Mock은 최대한 피하고 Fake 객체를 사용하면 좋겠어. 일단 Unit Te...",
+    "messageCount": 28,
+    "cwd": "N/A",
+    "gitBranch": "N/A",
+    "aiName": "Github Copilot"
+  },
+  {
+    "id": "github_copilot_enhancingLocation",
+    "title": "DB에 저장할때도 정규화한 값을 저장하고, find할때도 정규화한 값으로 찾게 하고 싶어.",
+    "date": "2025-11-23",
+    "description": "DB에 저장할때도 정규화한 값을 저장하고, find할때도 정규화한 값으로 찾게 하고 싶어. · Cluster 기능이 동작을 안하는데 왜 동작을 안하는지 설명 먼저 해주고, 작업해줄 수 있을까? · https://ma...",
+    "messageCount": 12,
+    "cwd": "N/A",
+    "gitBranch": "N/A",
+    "aiName": "Github Copilot"
+  },
+  {
+    "id": "github_copilot_enhancingUI",
+    "title": "API Key를 바로 코드에서 호출하는데, 숨겨줘",
+    "date": "2025-11-23",
+    "description": "API Key를 바로 코드에서 호출하는데, 숨겨줘 · 현재 시스템 테마에 맞게 UI가 나오게 해줘 · edgeToEdge인데 왜 전체 화면이 아니지?",
+    "messageCount": 10,
+    "cwd": "N/A",
+    "gitBranch": "N/A",
+    "aiName": "Github Copilot"
   }
 ]

@@ -36,7 +36,7 @@ export interface ConversationMessage {
 }
 
 export interface ParsedMessage {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'context';
   content: string;
   timestamp: string;
   isAgent: boolean;
