@@ -10,6 +10,26 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+export async function generateStaticParams() {
+  const conversationsDir = path.join(
+    process.cwd(),
+    'public',
+    'conversations'
+  );
+
+  try {
+    const files = fs.readdirSync(conversationsDir);
+    const jsonlFiles = files.filter((file) => file.endsWith('.jsonl'));
+
+    return jsonlFiles.map((file) => ({
+      id: file.replace('.jsonl', ''),
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params:', error);
+    return [];
+  }
+}
+
 async function getConversation(id: string) {
   const conversationPath = path.join(
     process.cwd(),
