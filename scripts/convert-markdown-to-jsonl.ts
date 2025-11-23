@@ -106,7 +106,7 @@ function main() {
 
   if (args.length === 0) {
     // Process all markdown files in raw directory
-    const rawDir = path.join(process.cwd(), '..', 'raw');
+    const rawDir = path.join(process.cwd(), 'raw');
     const outputDir = path.join(process.cwd(), 'public', 'conversations');
 
     if (!fs.existsSync(rawDir)) {

@@ -40,10 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.idea/*
-
 # conversation data (optional - uncomment if you don't want to commit conversations)
 # /public/conversations/*.jsonl
 # /public/conversations/index.json
-/.idea/
-.idea
