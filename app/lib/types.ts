@@ -18,7 +18,7 @@ export interface ContentBlock {
 }
 
 export interface ConversationMessage {
-  type: 'user' | 'assistant' | 'system';
+  type: 'user' | 'assistant' | 'system' | 'file-history-snapshot' | 'queue-operation' | 'summary';
   parentUuid: string | null;
   isSidechain: boolean;
   userType?: string;
